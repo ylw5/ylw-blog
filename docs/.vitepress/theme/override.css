@@ -1,0 +1,46 @@
+html{
+  /* scrollbar-width: auto; */
+  scrollbar-color: #6969dd #e0d0d0;
+}
+:root {
+  --vt-c-brand: #646cff;
+  --vt-c-brand-light: #747bff;
+  --vt-c-brand-dark: #444cd8;
+  
+}
+:root {
+  --vp-c-brand: #646cff;
+  --vp-code-block-bg:#f8f8f8
+}
+.dark{
+  --vp-code-block-bg:#1a1a1a
+}
+.container{
+  position: relative;
+}
+.aside{
+  opacity: 0;
+  position: absolute!important;
+  right: 0;
+  transform: translateX(140px);
+  height: 100%;
+  transition: all .2s;
+}
+.aside:hover{
+  opacity: 1;
+}
+div[class*="language-"]{
+  scrollbar-width: thin;
+}
+
+div[class*="language-"]::-webkit-scrollbar {
+  width: 16px!important;
+}
+div[class*="language-"]::-webkit-scrollbar-track {
+  background-color: red;
+  border-radius: 100px;
+}
+div[class*="language-"]::-webkit-scrollbar-thumb {
+  background-color: #444cd8;
+  border-radius: 100px;
+}
