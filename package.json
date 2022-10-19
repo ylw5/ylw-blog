@@ -12,7 +12,8 @@
     "build": "vitepress build docs",
     "serve": "vitepress serve docs",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "ci-docs": "run-s docs-build"
   },
   "dependencies": {
     "fast-glob": "^3.2.12",
