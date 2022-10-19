@@ -2,6 +2,9 @@
   "name": "ylw-blog",
   "version": "1.0.0",
   "description": "",
+  "author": "ylw5",
+  "license": "MIT",
+  "keywords": ["blog", "vitepress"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,9 +14,10 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "dependencies": {
+    "fast-glob": "^3.2.12",
+    "gray-matter": "^4.0.3"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^0.27.0",
     "eslint": "^8.25.0",

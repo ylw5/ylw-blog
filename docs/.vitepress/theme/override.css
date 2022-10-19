@@ -10,7 +10,9 @@ html{
 }
 :root {
   --vp-c-brand: #646cff;
-  --vp-code-block-bg:#f8f8f8
+  --vp-code-block-bg:#f8f8f8;
+  --vp-code-font-size:0.9em;
+  --vp-code-line-height:1.6;
 }
 .dark{
   --vp-code-block-bg:#1a1a1a
@@ -43,4 +45,13 @@ div[class*="language-"]::-webkit-scrollbar-track {
 div[class*="language-"]::-webkit-scrollbar-thumb {
   background-color: #444cd8;
   border-radius: 100px;
+}
+
+@font-face {
+  font-family: 'GreatVibes-Regular';
+  src: url(./fonts/GreatVibes-Regular.ttf);
+}
+@font-face {
+  font-family: 'KaushanScript-Regular';
+  src: url(./fonts/KaushanScript-Regular.ttf);
 }

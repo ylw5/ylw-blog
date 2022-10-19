@@ -1,3 +1,7 @@
+---
+title: 手撕 call / apply / bind
+time: 2019-12-12
+---
 # 手撕 call / apply / bind
 
 ## call
