@@ -3,7 +3,7 @@ layout: page
 ---
 
 <script setup>
-import PostList from './postList.vue'
+import PostList from './PostList.vue'
 </script>
 
 <PostList />
