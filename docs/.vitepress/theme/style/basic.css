@@ -1,0 +1,39 @@
+:root {
+  --vp-c-brand: #67a5e0;
+  --vp-c-brand-dark: #70badf;
+  --vp-scroll-bar-track-bg:#efeded;
+  --vp-scroll-bar-thumb-bg:#dfdcdc;
+}
+
+.dark{
+  --vp-scroll-bar-thumb-bg:#3f3e3e;
+}
+
+/* custom html scroll bar */
+html::-webkit-scrollbar
+{
+	width: 9px;
+}
+
+html::-webkit-scrollbar-track
+{
+	border-radius: 9px;
+	background-color: var(--vp-scroll-bar-track-bg);
+}
+
+html::-webkit-scrollbar-thumb
+{
+	border-radius: 9px;
+	background-color: var(--vp-scroll-bar-thumb-bg);
+}
+
+html::-webkit-scrollbar-thumb:hover
+{
+	background-color: #989696;
+}
+.dark html::-webkit-scrollbar-thumb:hover
+{
+	background-color: #726f6f;
+}
+
+

@@ -1,0 +1,25 @@
+:root{
+  --vp-code-block-bg:#f8f8f8;
+  --vp-code-font-size:0.9em;
+  --vp-code-line-height:1.6;
+}
+.dark{
+  --vp-code-block-bg:#1a1a1a;
+  --vp-scroll-bar-track-bg:#211f1f;
+}
+
+
+.vp-doc h1{
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.vp-doc [class*="language-"] pre::-webkit-scrollbar{
+  height: 10px;
+}
+.vp-doc [class*="language-"] pre::-webkit-scrollbar-track{
+  background-color: var(--vp-scroll-bar-track-bg);
+}
+.vp-doc [class*="language-"] pre::-webkit-scrollbar-thumb{
+  background-color: var(--vp-scroll-bar-thumb-bg);
+  border-radius: 9px;
+}

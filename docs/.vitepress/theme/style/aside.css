@@ -1,0 +1,14 @@
+.container{
+  position: relative;
+}
+.aside{
+  opacity: 0;
+  position: absolute!important;
+  right: 0;
+  transform: translateX(140px);
+  height: 100%;
+  transition: all .2s;
+}
+.aside:hover{
+  opacity: 1;
+}
