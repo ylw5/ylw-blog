@@ -65,7 +65,7 @@ function.bind(thisArg[, arg1[, arg2[, ...]]])
 
 基本思路：
 
-同`call`一样，在绑定对象`thisArg`上创建函数方法`fn`，但是返回一个新的函数，在其中调用固定的方法（闭包）
+同`call`一样，在绑定对象`thisArg`上创建函数方法`fn`，但是返回一个新的函数，在其中调用绑定的方法（闭包）
 
 ```javascript
 Function.prototype.myBind = function (thisArg, ...innerArgs) {

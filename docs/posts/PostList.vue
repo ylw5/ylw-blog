@@ -27,9 +27,10 @@ import { data as postList } from './post.data'
   margin: 0 auto;
 }
 .post-item{
+  padding-left: 30px;
   display: block;
   margin: 20px 0;
-  color: #666666;
+  color: #626262;
   transition: all 0.2s;
 }
 .post-item:hover{
@@ -38,9 +39,9 @@ import { data as postList } from './post.data'
 .title{
   line-height: 1.3em;
   font-weight: 5800;
-  font-size: 21px;
+  font-size: 20px;
   font-family: 'Inter';
-  opacity: .8;
+  letter-spacing: 0.02em;
 }
 .time{
   font-family: 'KaushanScript-Regular';
