@@ -1,6 +1,6 @@
 ---
-title: 手撕 call / apply / bind
-time: 2019-12-12
+title: call / apply / bind
+time: 2022-10-10
 ---
 # 手撕 call / apply / bind
 
