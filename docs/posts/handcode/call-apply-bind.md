@@ -79,5 +79,5 @@ Function.prototype.myBind = function (thisArg, ...innerArgs) {
 }
 ```
 
-## new
+
 

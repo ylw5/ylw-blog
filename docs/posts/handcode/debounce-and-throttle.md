@@ -13,7 +13,7 @@ time: 2022-10-17
 - **结束状态**执行
 - 技能有蓄力过程，如果被打断了就要重新蓄力
 
-![image-20221022162057922](assets/image-20221022162057922.png)
+![debounce](assets/debounce.png)
 
 ### 应用：
 
@@ -42,15 +42,6 @@ function debounce(fn, wait) {
 }
 ```
 
-```javascript
-let debounceFn = debounce((a) => {
-  console.log(a);
-}, 1000)
-debounceFn(1)
-debounceFn(2)
-// 输出2
-```
-
 ## 节流（throttle）
 
 > 在一个时间间隔内，不管触发事件多少次，最终只调用执行一次
@@ -61,7 +52,7 @@ debounceFn(2)
 - 技能有冷却时间，在冷却时间内把键盘扣烂了也用不出技能😂
 - 漏斗顶部有很多水，本来在1分钟内可以流出很多，现在有了阀门，一分钟内只能流出一滴，所以叫做节流，防止流量过大。
 
-![image-20221022161921763](assets/image-20221022161921763.png)
+![throttle](assets/throttle.png)
 
 ### 应用：
 

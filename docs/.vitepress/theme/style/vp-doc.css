@@ -23,3 +23,7 @@
   background-color: var(--vp-scroll-bar-thumb-bg);
   border-radius: 9px;
 }
+
+.vp-doc img{
+  margin: auto;
+}

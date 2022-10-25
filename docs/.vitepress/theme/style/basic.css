@@ -1,13 +1,21 @@
 :root {
-  --vp-c-brand: #67a5e0;
-  --vp-c-brand-dark: #70badf;
+	/* --vp-font-family-base: 'sans-serif'; */
+  --vp-c-brand: #128fa3;
+  --vp-c-brand-dark: #128fa3;
   --vp-scroll-bar-track-bg:#efeded;
   --vp-scroll-bar-thumb-bg:#dfdcdc;
+	--vp-code-line-highlight-color:#9a919140;
 }
 
 .dark{
   --vp-scroll-bar-thumb-bg:#3f3e3e;
+	--vp-code-line-highlight-color:#0d0d0d;
 }
+
+/* FIXME: 添加了平滑滚动outline锚点跳转有误差 */
+/* html{
+	scroll-behavior: smooth;
+} */
 
 /* custom html scroll bar */
 html::-webkit-scrollbar
@@ -34,6 +42,12 @@ html::-webkit-scrollbar-thumb:hover
 .dark html::-webkit-scrollbar-thumb:hover
 {
 	background-color: #726f6f;
+}
+
+
+.outline-marker {
+	width: 2px!important;
+	border-radius: 3px;
 }
 
 
