@@ -56,7 +56,7 @@ p.then((res) => {
 
 
 
-<img src="assets/basic-promise.png" alt="basic promise" style="zoom:33%;" />
+<img src="./assets/basic-promise.png" alt="basic promise" style="zoom:33%;" />
 
 
 
@@ -66,7 +66,7 @@ p.then((res) => {
 
 ### 主要流程（以 resolve 为例）
 
-<img src="assets/normal-flow.png" alt="normal flow" style="zoom: 33%;" />
+<img src="./assets/normal-flow.png" alt="normal flow" style="zoom: 33%;" />
 
 ### 代码实现
 
@@ -224,7 +224,7 @@ class Promise {
 
   `resolve(nextValue)`，nextPromise 成为已兑现状态（ fulfilled ），nextValue存储为兑现结果。流程如下图所示：
 
-<img src="assets/resolve-promise1.png" alt="resolve-promise1" title="resovlePromise" style="zoom:50%;" />
+<img src="./assets/resolve-promise1.png" alt="resolve-promise1" title="resovlePromise" style="zoom:50%;" />
 
 - Promise / thenable Object：
 
