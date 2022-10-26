@@ -3,7 +3,7 @@ title: 手写Promise
 time: 2022-10-20
 ---
 
-# Promise
+# 手写Promise
 
 > [Promise - JavaScript | MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise)
 >
@@ -291,7 +291,7 @@ function resolvePromise(nextPromise, nextValue, resolve, reject) {
 }
 ```
 
-## 其他规范
+## 更多规范
 
 - 如果该 onFulfilled 不是函数，则会在内部被替换为 `(x) => x`，即原样返回 promise 最终结果的函数
 
@@ -448,11 +448,209 @@ function resolvePromise(nextPromise, nextValue, resolve, reject) {
 ```
 :::
 
-## 语法糖实现
+## 其他语法糖实现
+
+### resolve
+
+```javascript
+static resolve(value){
+    let p =  new Promise((resolve,reject)=>{
+      setTimeout(() => {
+        resolvePromise(p, value, resolve, reject)
+      }, 0);
+    })
+    return p
+  }
+```
+
+### reject
+
+```javascript
+static reject(reason) {
+    return new Promise((resolve, reject) => {
+      reject(reason)
+    })
+  }
+```
+
+### catch
+
+> then注册失败函数的语法糖
+
+```javascript
+catch(onRejected){
+	return this.then(null,onRejected)
+}
+```
+
+### finally
+
+> 在 promise 结束时，无论结果是 fulfilled 或者是 rejected，都会执行指定的回调函数
+
+走个过场，不影响链式调用中结果的传递
+
+```javascript
+finally(onFinally){
+  return this.then(
+    (value)=>{
+      // Promise.resovle作用是如果onFinally返回promsie或是异步操作，需要等待它完成才能继续传递上一个结果
+      return Promise.resolve(onFinally()).then(()=>value)
+    },
+    (reason)=>{
+      return Promise.resolve(onFinally()).then(()=>{throw reason})
+    }
+  )
+}
+```
+
+### all
+
+```javascript
+Promise.all(iterable); // iterable:一个可迭代对象，如 Array 或 String 
+```
+
+等待所有都完成（或第一个失败）
+
+- 传入的 promise 有一个失败，`Promise.all`异步地将失败结果传递给失败回调
+- 传入的 promise 都变为完成状态，或传入的可迭代对象内没有 promise，`Promise.all` 返回的 promise 异步完成，返回完成状态的结果数组。
+
+```javascript
+static all(promises) {
+  return new Promise((resolve, reject) => {
+    const result = []
+    let currentIndex = 0,count = 0
+    // 遍历可迭代对象
+    for(let promise of promises){
+      let resultIndex = currentIndex++
+      if(promise instanceof Promise){
+        promise.then(
+          (value)=>{
+            result[resultIndex] = value
+            count++
+            if(count === promise.length){
+              resolve(result)
+            }
+          },
+          (reason)=>{
+            reject(reason)
+          }
+        )
+      } else {
+        result[resultIndex] = promise
+      }
+    }
+    if(currentIndex === 0){
+      resolve(result)
+    }
+  })
+}
+```
+
+### allSettled
+
+> 当您有多个彼此不依赖的异步任务成功完成时，或者您总是想知道每个`promise`的结果时，通常使用它。
+
+返回的数据如：
+
+```javascript
+[
+	{status: 'fulfilled', value: 'success'}, 
+	{status: 'rejected', reason: 'error'}
+]
+```
+
+```javascript
+static allSettled(promises) {
+  return new Promise((resolve, reject) => {
+    const result = []
+    let currentIndex = 0,count = 0
+
+    // 遍历可迭代对象
+    for(let promise of promises){
+      let resultIndex = currentIndex++
+      if(promise instanceof Promise){
+        promise.then(
+          (value)=>{
+            result[resultIndex] = {status:'fulfilled',value}
+            count++
+            if(count === promise.length){
+              resolve(result)
+            }
+          },
+          (reason)=>{
+            result[resultIndex] = {status:'rejected',reason}
+            count++
+            if(count === promise.length){
+              resolve(result)
+            }
+          }
+        )
+      } else {
+        result[resultIndex] = {status:'fulfilled',value: promise}
+      }
+    }
+    if(currentIndex === 0){
+      resolve(result)
+    }
+  })
+}
+```
 
 
 
+### race
 
+> **`Promise.race(iterable)` **方法返回一个 promise，一旦迭代器中的某个 promise 解决或拒绝，返回的 promise 就会解决或拒绝。
 
+```javascript
+static race(promises) {
+  return new Promise((resolve, reject) => {
+    for(let promise of promises){
+      if(promise instanceof Promise){
+        promise.then(
+          (value)=>{
+            resolve(value)
+          },
+          (reason)=>{
+            reject(reason)
+          }
+        )
+      } else {
+        resolve(promise)
+      }
+    }
+  })
+}
+```
 
+### any
+
+> `Promise.any(iterable);` 用于获取首个**兑现**的 `promise` 的值。只要有一个 `promise` 兑现了，那么此方法就会提前结束，而不会继续等待其他的 `promise` 全部敲定。
+
+```javascript
+static any(promises){
+  return new Promise((resolve,reject)=>{
+    if(!promises.length)reject(new AggregateError('All promises were rejected'))
+
+    let rejectedCount = 0
+    for(let promise of promises){
+      if(promise instanceof Promise){
+        promise.then(
+          (value)=>{
+            resolve(value)
+          },
+          (reason)=>{
+            rejectedCount++
+            if(rejectedCount === promises.length){
+              reject(new AggregateError('All promises were rejected'))
+            }
+          }
+        )
+      } else {
+        resolve(promise)
+      }
+    }
+  })
+}
+```
 

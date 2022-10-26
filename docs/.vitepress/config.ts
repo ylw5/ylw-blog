@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'ylw-blog',
+  titleTemplate: false,
   themeConfig: {
     nav: [
       { text: 'posts', link: '/posts/' },
