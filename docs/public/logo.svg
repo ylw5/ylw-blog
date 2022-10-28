@@ -1,0 +1,14 @@
+<svg width="51.99999999999999" height="24" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color: #4bbde7;stop-opacity:1" />
+      <stop offset="25%" style="stop-color: #49acec;stop-opacity:1" />
+      <stop offset="50%" style="stop-color: #479bf1;stop-opacity:1" />
+      <stop offset="75%" style="stop-color:  #468af5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color: #4268ff;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+ <g>
+  <path stroke-width="0" stroke="#213547" id="svg_20" d="m13.87452,8.1236c-9.46088,10.86153 -0.31046,4.78735 3.82843,0.99546c4.13889,-3.79189 -3.44921,6.36608 -9.55101,11.95358c-6.1018,5.5875 -7.47702,0.90199 2.78855,-4.48526c10.26557,-5.38725 24.90085,-17.61548 21.49659,-13.83496c-3.40426,3.78052 -14.97636,16.4579 -6.35152,10.01812c8.62484,-6.43978 5.89493,-4.39208 3.66884,-0.53591c-2.22609,3.85616 0.42372,2.76655 3.73798,-0.67433c3.31426,-3.44088 3.54404,-4.37626 2.24548,-0.13448c-1.29855,4.24178 1.35969,3.4844 5.63732,-3.4508" opacity="NaN" fill="url(#grad1)"/>
+ </g>
+</svg>
