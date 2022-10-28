@@ -10,7 +10,6 @@ export default defineConfig({
     siteTitle: false,
     nav: [
       { text: 'posts', link: '/posts/' },
-      { text: 'project', link: '/' },
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ylw5' },
