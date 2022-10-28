@@ -28,7 +28,7 @@
   margin: auto;
 }
 
-.vp-doc a{
+.vp-doc a:not(.header-anchor){
   /* border-bottom: 1px dashed transparent;  */
   background-image: linear-gradient(to right,  #4bbde79e 0%,  #4268ffad 50%, transparent 0%);
   background-size: 13px 1px;
@@ -37,7 +37,7 @@
   transition: background-position .2s;
 }
 
-.vp-doc a:hover{
+.vp-doc a:not(.header-anchor):hover{
   /* border-bottom: 1px dashed transparent;  */
   background-image: linear-gradient(to right,  #4bbde7 0%,  #4268ff 50%, transparent 0%);
   background-size: 13px 1px;
