@@ -27,3 +27,20 @@
 .vp-doc img{
   margin: auto;
 }
+
+.vp-doc a{
+  /* border-bottom: 1px dashed transparent;  */
+  background-image: linear-gradient(to right,  #4bbde79e 0%,  #4268ffad 50%, transparent 0%);
+  background-size: 13px 1px;
+  background-repeat: repeat-x;
+  background-position: bottom left;
+  transition: background-position .2s;
+}
+
+.vp-doc a:hover{
+  /* border-bottom: 1px dashed transparent;  */
+  background-image: linear-gradient(to right,  #4bbde7 0%,  #4268ff 50%, transparent 0%);
+  background-size: 13px 1px;
+  background-repeat: repeat-x;
+  background-position: 2% 100%;
+}

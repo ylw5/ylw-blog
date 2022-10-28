@@ -1,0 +1,9 @@
+/* @media(min-width: 768px){
+  .VPFooter{
+    padding: 15px;
+    background-color: red;
+  }
+} */
+.VPFooter{
+  padding: 15px!important;
+}
