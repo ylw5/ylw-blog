@@ -4,7 +4,8 @@
   --vp-c-brand-dark:  #479bf1;
   --vp-scroll-bar-track-bg:#efeded;
   --vp-scroll-bar-thumb-bg:#dfdcdc;
-	--vp-code-line-highlight-color:#9a919140;
+	--vp-code-line-highlight-color:#d0cece48;
+	--vp-code-line-diff-remove-color: rgba(255, 128, 128, 0.15);
 }
 
 .dark{
