@@ -168,7 +168,7 @@ setTimeout(() => {
 
 三者关系如下：
 
-<img src="assets/bucket-construct.png" alt="bucket structure" style="zoom: 40%;" />
+<img src="./assets/bucket-construct.png" alt="bucket structure" style="zoom: 40%;" />
 
 使用 WeakMap 代替 Set 作为桶的数据结构：
 
