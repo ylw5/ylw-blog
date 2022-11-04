@@ -2,10 +2,12 @@
   --vp-code-block-bg:#f8f8f8;
   --vp-code-font-size:0.9em;
   --vp-code-line-height:1.6;
+  --vp-inline-code-color:#222;
 }
 .dark{
   --vp-code-block-bg:#1a1a1a;
   --vp-scroll-bar-track-bg:#211f1f;
+  --vp-inline-code-color:#ddd;
 }
 
 
@@ -43,4 +45,10 @@
   background-size: 13px 1px;
   background-repeat: repeat-x;
   background-position: 2% 100%;
+}
+
+.vp-doc :not(pre) > code{
+  background-color: transparent;
+  color: var(--vp-inline-code-color);
+  padding: 3px 3px;
 }
