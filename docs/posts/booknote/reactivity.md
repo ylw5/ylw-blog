@@ -1,5 +1,5 @@
 ---
-title: 读书笔记——实现响应式系统
+title: 读书笔记——响应式系统
 time: 2022-10-28
 ---
 
@@ -30,7 +30,7 @@ time: 2022-10-28
   }
   ```
 
-  当修改 `obj.text` 的值后，我们希望  body  的文本内容也随之更新（重新执行副作用函数 effect ），这个对象 obj 就是响应式数据。
+  当修改 `obj.text` 的值后，我们希望  `body`  的文本内容也随之更新（重新执行副作用函数 `effect` ），这个对象 `obj` 就是响应式数据。
 
 ## 响应式数据的基本实现
 
@@ -82,7 +82,7 @@ setTimeout(() => {
 
 
 
-缺陷：当前是硬编码机制，直接通过名字 effect 获取副作用函数，不灵活
+缺陷：当前是硬编码机制，直接通过名字 `effect` 获取副作用函数，不灵活
 
 目标：副作用函数名字可以任意取，甚至是匿名函数
 
@@ -117,7 +117,7 @@ effect(
 )
 ```
 
-然后修改 get 拦截函数
+然后修改 `get` 拦截函数
 
 ```javascript
 const obj = new Proxy(data, {
@@ -137,7 +137,7 @@ const obj = new Proxy(data, {
 
 ### 完善二：建立明确联系
 
-对这个系统稍加测试，例如在响应式数据 obj 上设置一个不存在的属性：
+对这个系统稍加测试，例如在响应式数据 `obj` 上设置一个不存在的属性：
 
 ```js
 // 注册匿名副作用函数
@@ -154,17 +154,17 @@ setTimeout(() => {
 
 ```
 
-问题：匿名副作用函数与 obj.text 之间会建立响应联系，但是对 obj 对象上其他属性的设置也会触发副作用函数重新执行。
+问题：匿名副作用函数与 `obj.text` 之间会建立响应联系，但是对 `obj` 对象上其他属性的设置也会触发副作用函数重新执行。
 
 解决：重新设计 “桶” 的数据结构，**在副作用函数<sup>①</sup>与被操作的目标<sup>②</sup>字段<sup>③</sup>之间建立明确的联系**。
 
 以上涉及三个角色：
 
-1. 使用 effect 函数注册的副作用函数 effectFn
+1. 使用 `effect` 函数注册的副作用函数 `effectFn`
 
-2. 被操作的目标 target（代理对象所代理的原始对象）
+2. 被操作的目标 `target`（代理对象所代理的原始对象）
 
-3. 被操作的字段 key（注意和Map中的键 Key 作区分）
+3. 被操作的字段 `key`（注意和 Map 中的键 Key 作区分）
 
 三者关系如下：
 
@@ -177,7 +177,7 @@ setTimeout(() => {
 const bucket = new WeakMap()
 ```
 
-然后修改 get / set 拦截器代码：
+然后修改 `get / set` 拦截器代码：
 
 ```javascript
 const obj = new Proxy(data, {
@@ -215,9 +215,9 @@ const obj = new Proxy(data, {
 
  为什么使用 WeakMap：
 
-WeakMap 对 key 是**弱引用**，不影响**垃圾回收器**的工作。例如上面场景中，当用户侧的代码对代理的原数据 target 没有任何引用时，它将被回收，若使用 Map，则一直存在与 key 中，最终可能导致内存溢出。
+WeakMap 对 `key` 是**弱引用**，不影响**垃圾回收器**的工作。例如上面场景中，当用户侧的代码对代理的原数据 `target` 没有任何引用时，它将被回收，若使用 Map，则一直存在与 `key` 中，最终可能导致内存溢出。
 
-最后，对代码进行封装，将收集副作用函数逻辑封装到 track 函数中，将触发副作用函数重新执行逻辑 封装到 trigger 函数中：
+最后，对代码进行封装，将收集副作用函数逻辑封装到 `track` 函数中，将触发副作用函数重新执行逻辑 封装到 `trigger` 函数中：
 
 ```javascript
 const obj = new Proxy(data, {
@@ -273,15 +273,15 @@ effect(function effectFn(){
 })
 ```
 
-副作用函数 effectFn 内部存在一个三元表达式，根据 obj.ok 值的不同执行不同的代码分支，这就是所谓分支切换。
+副作用函数 `effectFn` 内部存在一个三元表达式，根据 `obj.ok` 值的不同执行不同的代码分支，这就是所谓分支切换。
 
 **问题**：可能会产生遗留的副作用函数
 
-**分析**：在一开始执行 `document.body.innerText = obj.ok ? obj.text : 'not'` 时，副作用函数会和 ok 字段和 text 字段都建立联系（被收集到各自的依赖集合）。当字段 obj.ok 变为 false，此时的 `document.body.innerText` 值与 obj.text 无关，但是副作用函数仍然存在于它的依赖集合中，对 obj.text 的设置操作仍会触发副作用函数的执行。
+**分析**：在一开始执行 `document.body.innerText = obj.ok ? obj.text : 'not'` 时，副作用函数会和 `ok` 字段和 `text` 字段都建立联系（被收集到各自的依赖集合）。当字段 `obj.ok` 变为 false，此时的 `document.body.innerText` 值与 `obj.text` 无关，但是副作用函数仍然存在于它的依赖集合中，对 `obj.text` 的设置操作仍会触发副作用函数的执行。
 
 **解决**：每个副作用函数都存储与之相关联的依赖集合，每次副作用函数执行时，将其从相关联的依赖集合中移除，当副作用函数执行完毕后，重新建立联系。
 
-为副作用函数 effectFn 添加 deps 属性，该属性是一个数组，用来存储所有与该副作用函数相关联（包含它）的依赖集合。
+为副作用函数 `effectFn` 添加 `deps` 属性，该属性是一个数组，用来存储所有与该副作用函数相关联（包含它）的依赖集合。
 
 ```javascript
 // 用一个全局变量存储被注册的副作用函数
@@ -300,7 +300,7 @@ function effect(fn) {
 }
 ```
 
-在 track 函数中收集副作用函数的相关依赖集合：
+在 `track` 函数中收集副作用函数的相关依赖集合：
 
 ```javascript
 function track(target, key) {
@@ -324,7 +324,7 @@ function track(target, key) {
 }
 ```
 
-副作用函数执行时，根据 effectFn.deps 获取所有相关联的依赖集合，将副作用函数从依赖集合中移除：
+副作用函数执行时，根据 `effectFn.deps` 获取所有相关联的依赖集合，将副作用函数从依赖集合中移除：
 
 ```javascript
 // 用一个全局变量存储被注册的副作用函数
@@ -345,7 +345,7 @@ function effect(fn) {
 }
 ```
 
-cleanup 函数实现：
+`cleanup` 函数实现：
 
 ```javascript
 function cleanup(effectFn) {
@@ -362,7 +362,7 @@ function cleanup(effectFn) {
 
 至此，副作用函数遗留问题已经解决。
 
-还需修改 trigger 函数避免无限执行。
+还需修改 `trigger` 函数避免无限执行。
 
 ```javascript
 function trigger(target, key) {
@@ -383,7 +383,7 @@ function trigger(target, key) {
 
 ### 什么是嵌套的 effect ？
 
-例如以下代码，effectFn1 内部嵌套 effectFn2
+例如以下代码，`effectFn1` 内部嵌套 `effectFn2`
 
 ```javascript
 effect(function effectFn1() {
@@ -394,7 +394,7 @@ effect(function effectFn1() {
 
 ### 为什么需要嵌套的 effect ？
 
-例如在 Vue.js 中，渲染函数就是在 effect 中执行的：
+例如在 Vue.js 中，渲染函数就是在 `effect` 中执行的：
 
 ```javascript
 // Foo 组件
@@ -409,7 +409,7 @@ effect(() => {
 })
 ```
 
-当组件嵌套时，就发生了 effect 嵌套：
+当组件嵌套时，就发生了 `effect` 嵌套：
 
 ```javascript
 // Bar 组件
@@ -438,13 +438,13 @@ effect(() => {
 
 ### 当前响应式系统对于嵌套 effect 的缺陷
 
-我们用全局变量 activeEffect 存储通过 effect 函数注册的副作用函数，这意味着同一时刻 activeEffect 所存储的被激活函数只能有一个，所以内层嵌套的副作用函数执行会直接覆盖 activeEffect 值，且在执行后无法恢复，导致在外层副作用函数中响应式收集到的副作用函数都会是内层副作用函数。
+我们用全局变量 `activeEffect` 存储通过 `effect` 函数注册的副作用函数，这意味着同一时刻 `activeEffect` 所存储的被激活函数只能有一个，所以内层嵌套的副作用函数执行会直接覆盖 `activeEffect` 值，且在执行后无法恢复，导致在外层副作用函数中响应式收集到的副作用函数都会是内层副作用函数。
 
-为解决这一问题，需要一个副作用函数栈来解决层级关系，使得activeEffect 的值能够还原。
+为解决这一问题，需要一个副作用函数栈来解决层级关系，使得 `activeEffect` 的值能够还原。
 
 ### effect 栈
 
-定义 effectStack 数组来模拟栈，activeEffect 仍然指向当前被激活的副作用函数，但是在副作用函数执行前，将其压入栈顶，等执行完毕，将其弹出，activeEffect 还原为上层副作用函数。
+定义 `effectStack` 数组来模拟栈，`activeEffect` 仍然指向当前被激活的副作用函数，但是在副作用函数执行前，将其压入栈顶，等执行完毕，将其弹出，`activeEffect` 还原为上层副作用函数。
 
 ```javascript
 // 用一个全局变量存储当前激活的副作用函数
@@ -487,11 +487,11 @@ effect(() => obj.foo++)
 
 **分析**：
 
-`obj.foo++` 可以看作 `obj.foo = obj.foo + 1` ，这个语句中既有对 obj.foo 的读取操作，又有对 obj.foo 的设置操作。首先读取 obj.foo 的值，会触发 track 操作，收集副作用函数，接着赋值给 obj.foo，触发 trigger 操作，取出副作用函数执行，此时一开始的副作用函数都还没有执行完，导致无限递归地调用自己，于是产生了栈溢出.
+`obj.foo++` 可以看作 `obj.foo = obj.foo + 1` ，这个语句中既有对 `obj.foo` 的读取操作，又有对 `obj.foo` 的设置操作。首先读取 `obj.foo` 的值，会触发 `track` 操作，收集副作用函数，接着赋值给 `obj.foo`，触发 `trigger` 操作，取出副作用函数执行，此时一开始的副作用函数都还没有执行完，导致无限递归地调用自己，于是产生了栈溢出.
 
 **解决**：
 
-在 trigger 操作前增加守卫条件：**如果 trigger 触发执行的副作用函数与当前正在执行的副作用函数相同，则不触发执行**。
+在 `trigger` 操作前增加守卫条件：**如果 `trigger` 触发执行的副作用函数与当前正在执行的副作用函数相同，则不触发执行**。
 
 ```javascript
 function trigger(target, key) {
@@ -514,9 +514,9 @@ function trigger(target, key) {
 
 ## 调度执行
 
-所谓可调度，指的是**当 trigger 动作触发副作用函数重新执行时，有能力决定副作用函数执行的时机、次数以及方式**。
+所谓可调度，指的是**当 `trigger` 动作触发副作用函数重新执行时，有能力决定副作用函数执行的时机、次数以及方式**。
 
-为 effect 函数设计一个选项参数 options，允许用户指定调度器：
+为 `effect` 函数设计一个选项参数 `options`，允许用户指定调度器：
 
 ```javascript
 effect(
@@ -533,7 +533,7 @@ effect(
 )
 ```
 
-在 effect 内部将 options 选项挂载到对应的副作用函数上：
+在 `effect` 内部将 `options` 选项挂载到对应的副作用函数上：
 
 ```javascript
 function effect(fn, options = {}) {
@@ -548,7 +548,7 @@ function effect(fn, options = {}) {
 }
 ```
 
-有了调度函数，我们在 trigger 动作中触发副作用函数重新执行时，就可以直接调用用户传递的调度器函数，从而把控制权交给用户。
+有了调度函数，我们在 `trigger` 动作中触发副作用函数重新执行时，就可以直接调用用户传递的调度器函数，从而把控制权交给用户。
 
 ```javascript
 function trigger(target, key) {
@@ -609,11 +609,11 @@ console.log('结束了')
 
 ## 计算属性 computed 与 lazy
 
-前文介绍了 effect 函数、选项参数 options、调度器 scheduler、追踪和收集依赖函数 track、触发副作用函数重新执行函数 trigger，接下来实现计算属性。
+前文介绍了 `effect` 函数、选项参数 `options`、调度器 `scheduler`、追踪和收集依赖函数 track、触发副作用函数重新执行函数 `trigger`，接下来实现计算属性。
 
 ### 懒执行
 
-现在我们实现的 effect 函数会立即执行传递给它的副作用函数，例如：
+现在我们实现的 `effect` 函数会立即执行传递给它的副作用函数，例如：
 
 ```javascript
 effect(
@@ -624,7 +624,7 @@ effect(
 
 但在有些场景下，我们并不希望它立即执行，而是需要的时候才执行，这就是懒执行。
 
-通过在 options 中添加 lazy 属性达到目的。
+通过在 `options` 中添加 `lazy` 属性达到目的。
 
 ```javascript
 effect(
@@ -638,7 +638,7 @@ effect(
 )
 ```
 
-修改 effect 函数，当 option.lazy 为 true 时，不立即执行副作用函数。
+修改 `effect` 函数，当 `option.lazy` 为 `true` 时，不立即执行副作用函数。
 
 ```javascript
 function effect(fn, options = {}) {
@@ -660,7 +660,7 @@ function effect(fn, options = {}) {
 }
 ```
 
-当前仅能手动执行副作用函数，意义不大。如果把注册的副作用函数看作一个 getter，我们希望能够在手动执行副作用函数时，就能拿到返回值：
+当前仅能手动执行副作用函数，意义不大。如果把注册的副作用函数看作一个 `getter`，我们希望能够在手动执行副作用函数时，就能拿到返回值：
 
 ```javascript
 const effectFn = effect(
@@ -672,7 +672,7 @@ const effectFn = effect(
 const value = effectFn()
 ```
 
-对 effect 函数做一些修改：
+对 `effect` 函数做一些修改：
 
 ```javascript
 function effect(fn, options = {}) {
@@ -717,11 +717,11 @@ const sumRes = computed(() => obj.foo + obj.bar)
 console.log(sumRes.value)
 ```
 
-以上做到了懒计算，但是可以发现，如果多次访问 sumRes.value 的值，会导致 effectFn 进行多次计算，即使 obj.foo 和 obj.bar 的值并没有变化，所以还需要对值进行**缓存**。
+以上做到了懒计算，但是可以发现，如果多次访问 `sumRes.value` 的值，会导致 `effectFn` 进行多次计算，即使 `obj.foo` 和 `obj.bar` 的值并没有变化，所以还需要对值进行**缓存**。
 
 ### 缓存计算值
 
-新增两个变量 value 和 dirty，value 用来缓存上一次计算的值，dirty 是一个标识，代表是否需要重新计算。当通过 sumRes.value 访问值时，只有 dirty 为 true 时才调用 effectFn 重新计算，否则使用缓存值 value。添加调度器，在调度器中将 dirty 重置，说明计算值发生改变，下次访问需要重新计算。
+新增两个变量 `value` 和 `dirty`，`value` 用来缓存上一次计算的值，`dirty` 是一个标识，代表是否需要重新计算。当通过 `sumRes.value` 访问值时，只有 `dirty` 为 `true` 时才调用 `effectFn` 重新计算，否则使用缓存值 `value`。添加调度器，在调度器中将 `dirty` 重置，说明计算值发生改变，下次访问需要重新计算。
 
 ```javascript
 function computed(getter) {
@@ -752,7 +752,7 @@ function computed(getter) {
 
 ### 缺陷
 
-现在还有一个缺陷，体现在当我们在另一个 effect 中读取计算属性的值时：
+现在还有一个缺陷，体现在当我们在另一个 `effect` 中读取计算属性的值时：
 
 ```javascript
 const sumRes = computed(() => obj.foo + obj.bar)
@@ -766,13 +766,13 @@ effect(() => {
 obj.foo++
 ```
 
-**预期结果**：修改 obj.foo 的值后，重新打印计算属性 sumRes 的值
+**预期结果**：修改 `obj.foo` 的值后，重新打印计算属性 `sumRes` 的值
 
 **实际结果**：没有反应
 
-**分析**：这从本质上看就是 effect 嵌套，在读取 sumRes.value 时会调用 computed 中的 effect 。由于外层的 effect 不会被内层 effect 中的响应式数据收集，对于计算属性的 getter 函数来说，它里面访问的响应式数据只会把 computed 内部的 effect 收集为依赖。所以修改响应式数据 obj.foo 值后，外层的 `console.log()` 不会执行。
+**分析**：这从本质上看就是 `effect` 嵌套，在读取 `sumRes.value` 时会调用 `computed` 中的 `effect` 。由于外层的 `effect` 不会被内层 `effect` 中的响应式数据收集，对于计算属性的 `getter` 函数来说，它里面访问的响应式数据只会把 `computed` 内部的 `effect` 收集为依赖。所以修改响应式数据 `obj.foo` 值后，外层的 `console.log()` 不会执行。
 
-**解决**：读取计算属性的值时，手动调用 trigger 函数收集依赖（外层副作用函数）；当计算属性依赖的响应式数据发生变化时，手动调用 trigger 函数触发响应：
+**解决**：读取计算属性的值时，手动调用 `trigger` 函数收集依赖（外层副作用函数）；当计算属性依赖的响应式数据发生变化时，手动调用 `trigger` 函数触发响应：
 
 ```javascript
 function computed(getter) {
@@ -802,7 +802,7 @@ function computed(getter) {
 
 ## watch 的实现原理
 
-watch 本质就是**观测一个响应式书，当数据发生变化时通知并执行响应回调函数**。举个例子：
+`watch` 本质就是**观测一个响应式书，当数据发生变化时通知并执行响应回调函数**。举个例子：
 
 ```javascript
 watch(obj, () =>{
@@ -811,7 +811,7 @@ watch(obj, () =>{
 // 修改响应数据的值，会导致回调函数执行
 ```
 
-watch 的实现利用了 effect 以及 options.scheduler 选项：
+watch 的实现利用了 `effect` 以及 `options.scheduler` 选项：
 
 ```javascript
 function watch(source, callback) {
@@ -828,7 +828,7 @@ function watch(source, callback) {
 }
 ```
 
-上面代码硬编码了对 source.foo 的读取操作，只能观测对象 foo 属性的变化。然而观测的值可以是该对象上的任意属性也可以是一个 getter 函数，所以需要一个通用的读取操作：
+上面代码硬编码了对 `source.foo` 的读取操作，只能观测对象 `foo` 属性的变化。然而观测的值可以是该对象上的任意属性也可以是一个 `getter` 函数，所以需要一个通用的读取操作：
 
 ```javascript
 function watch(source, callback) {
@@ -867,7 +867,7 @@ function traverse(value, seen = new Set()) {
 }
 ```
 
-现在还缺少一个重要功能：回调中拿到变化前后的值。可以利用 effect 函数的 lazy 选项，如下代码所示：
+现在还缺少一个重要功能：回调中拿到变化前后的值。可以利用 `effect` 函数的 `lazy` 选项，如下代码所示：
 
 ```javascript
 function watch(source, callback) {
@@ -900,14 +900,14 @@ function watch(source, callback) {
 
 ## 立即执行的 watch 与回调执行时机
 
-上节介绍了 watch 的基本实现。本节继续讨论关于 watch 的两个特性：
+上节介绍了 `watch` 的基本实现。本节继续讨论关于 `watch` 的两个特性：
 
 1. 立即执行的回调函数
 2. 回调函数的执行时机
 
 ### 立即执行的回调函数
 
-默认情况下，watch 是懒执行的，可以通过选项参数 immediate 来指定回调是否需要立即执行：
+默认情况下，`watch` 是懒执行的，可以通过选项参数 `immediate` 来指定回调是否需要立即执行：
 
 ```javascript
 watch(obj, () => {
@@ -918,7 +918,7 @@ watch(obj, () => {
 })
 ```
 
-可以把 scheduler 调度函数封装为一个通用函数 job，分别在初始化和变更时执行它：
+可以把 `scheduler` 调度函数封装为一个通用函数 `job`，分别在初始化和变更时执行它：
 
 ```javascript
 function watch(source, callback) {
@@ -955,7 +955,7 @@ function watch(source, callback) {
 
 ### 回调函数的执行时机
 
-除了指定回调函数为立即执行外，还可以通过 flush 选项参数指定回调函数的执行时机：
+除了指定回调函数为立即执行外，还可以通过 `flush` 选项参数指定回调函数的执行时机：
 
 ```javascript
 watch(obj, () => {
@@ -965,7 +965,7 @@ watch(obj, () => {
 })
 ```
 
-当 flush 的值为 ‘post’ 时，代表调度函数需要将副作用函数放到一个微任务队列中，并等待 DOM 更新结束后再执行。用如下代码模拟：
+当 `flush` 的值为 `'post'` 时，代表调度函数需要将副作用函数放到一个微任务队列中，并等待 DOM 更新结束后再执行。用如下代码模拟：
 
 ```javascript
 function watch(source, callback) {
@@ -1009,7 +1009,7 @@ function watch(source, callback) {
 }
 ```
 
-对于 options.flush 为 ’pre‘ 的情况（在组件更新前），暂时还没有办法模拟，因为这涉及组件的更新时机。
+对于 `options.flush` 为 `'pre'` 的情况（在组件更新前），暂时还没有办法模拟，因为这涉及组件的更新时机。
 
 ## 过期的副作用
 
@@ -1030,17 +1030,17 @@ watch(obj, async() => {
 })
 ```
 
-watch 侦听 obj 对象变化，每次 obj 对象发生变化都会发送网络请求，等数据请求成功后，将结果赋值给 finalData 变量。
+`watch` 侦听 `obj` 对象变化，每次 `obj` 对象发生变化都会发送网络请求，等数据请求成功后，将结果赋值给 `finalData` 变量。
 
-假设修改两次 obj 对象，先后发送了两次请求：请求 A 和请求 B。但是请求 B 的数据先返回，请求 A 的数据后返回，并覆盖了 请求 B 返回的数据，而我们希望变量 finalData 存储的应该是最近一次请求（请求 B）返回的结果，而非请求 A 的返回结果。
+假设修改两次 `obj` 对象，先后发送了两次请求：请求 A 和请求 B。但是请求 B 的数据先返回，请求 A 的数据后返回，并覆盖了 请求 B 返回的数据，而我们希望变量 `finalData` 存储的应该是最近一次请求（请求 B）返回的结果，而非请求 A 的返回结果。
 
 ### 过期回调
 
-为了解决上述例子的竞态问题，应该在 watch 的回调中添加一个**过期标志**，如果当前副作用函数的执行已经过期，其产生了结果应被视为无效。
+为了解决上述例子的竞态问题，应该在 `watch` 的回调中添加一个**过期标志**，如果当前副作用函数的执行已经过期，其产生了结果应被视为无效。
 
 那么如何记录副作用函数是否过期呢？
 
-在 watch 函数的回调中接收第三个参数 onCleanup，它是一个函数，用来**注册过期回调** cleanupFn。副作用函数被触发时通过 onCleanup 注册过期回调，**当 watch 内部再次检测到变更，下一次副作用函数要被触发时，说明之前的副作用函数已经过期，执行已被注册的副作用函数**。
+在 `watch` 函数的回调中接收第三个参数 `onCleanup`，它是一个函数，用来**注册过期回调** `cleanupFn`。副作用函数被触发时通过 `onCleanup` 注册过期回调，**当 `watch` 内部再次检测到变更，下一次副作用函数要被触发时，说明之前的副作用函数已经过期，执行已被注册的副作用函数**。
 
 ```javascript
 watch(obj, async (newValue, oldValue, onCleanup) => {
@@ -1058,7 +1058,7 @@ watch(obj, async (newValue, oldValue, onCleanup) => {
 })
 ```
 
-watch 内部实现：
+`watch` 内部实现：
 
 ```javascript
 function watch(source, callback) {

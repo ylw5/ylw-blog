@@ -16,8 +16,8 @@ function.call(thisArg, arg1, arg2, ...)
 
 基本思路：
 
-- 将函数设为`thisArg`对象上的方法
-- 方法调用`thisArg.fn`
+- 将函数设为 `thisArg` 对象上的方法
+- 方法调用 `thisArg.fn`
 - 删除对象上的方法
 
 ```javascript
@@ -34,7 +34,7 @@ Function.prototype.myCall = function (thisArg, ...args) {
 
 ## apply
 
-和`call`的区别时第二个参数时一个数组或者类数组对象
+和 `call` 的区别时第二个参数时一个数组或者类数组对象
 
 ```javascript
 Function.prototype.myApply = function (thisArg, argsArray) {
@@ -65,7 +65,7 @@ function.bind(thisArg[, arg1[, arg2[, ...]]])
 
 基本思路：
 
-同`call`一样，在绑定对象`thisArg`上创建函数方法`fn`，但是返回一个新的函数，在其中调用绑定的方法（闭包）
+同 `call` 一样，在绑定对象 `thisArg` 上创建函数方法 `fn` ，但是返回一个新的函数，在其中调用绑定的方法（闭包）
 
 ```javascript
 Function.prototype.myBind = function (thisArg, ...innerArgs) {
