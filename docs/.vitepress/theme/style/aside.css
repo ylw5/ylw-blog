@@ -2,14 +2,17 @@
   position: relative;
 }
 #VPContent .aside{
-  opacity: 0;
+  opacity: 1;
   position: absolute;
   right: 0;
   transform: translateX(140px);
   height: 100%;
   transition: all .2s;
 }
-#VPContent .aside:hover{
+#VPContent .aside.disappear{
+  opacity: 0;
+}
+#VPContent .aside.disappear:hover{
   opacity: 1;
 }
 
