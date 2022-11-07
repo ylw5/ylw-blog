@@ -27,4 +27,17 @@ export default defineConfig({
       light: 'vitesse-light',
     },
   },
+  head: [
+    ['script', { }, `
+      var changeAsideOpacity = function () {
+        const aside = document.querySelector('.aside')
+        if(!aside) return
+        if (document.documentElement.scrollTop !== 0)
+          aside.classList.add('disappear')
+        else
+          aside.classList.remove('disappear')
+      };
+      window.addEventListener("scroll", changeAsideOpacity);
+    `],
+  ],
 })

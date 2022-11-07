@@ -319,9 +319,9 @@ function patchChildren(n1, n2, container) {
 }
 ```
 
-
-
 ## 双端 diff
+
+
 
 ## 快速 diff
 
