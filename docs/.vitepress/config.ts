@@ -32,12 +32,25 @@ export default defineConfig({
       var changeAsideOpacity = function () {
         const aside = document.querySelector('.aside')
         if(!aside) return
-        if (document.documentElement.scrollTop !== 0)
-          aside.classList.add('disappear')
-        else
-          aside.classList.remove('disappear')
+        if (document.documentElement.scrollTop !== 0){
+          aside.classList.add('disappear');
+        }
+        else {
+          aside.classList.remove('disappear');
+        }
       };
-      window.addEventListener("scroll", changeAsideOpacity);
+      function debounce(fn, delay) {
+        let timer = null;
+        return function () {
+          if (timer) {
+            clearTimeout(timer);
+          }
+          timer = setTimeout(() => {
+            fn.apply(this, arguments);
+          }, delay);
+        };
+      }
+      window.addEventListener("scroll", debounce(changeAsideOpacity,300));
     `],
   ],
 })
