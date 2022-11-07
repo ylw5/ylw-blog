@@ -31,7 +31,7 @@ export async function getPosts() {
 }
 export declare const data: Post[]
 export default {
-  watch: './*.md',
+  watch: ['./*.md', './**/*.md'],
   async load() {
     return await getPosts()
   },
