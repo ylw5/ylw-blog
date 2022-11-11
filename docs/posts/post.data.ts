@@ -19,7 +19,7 @@ export async function getPosts() {
         link: file.replace('docs', '').replace('.md', ''),
       }
     })
-    .sort((a, b) => b.time.getTime() - a.time.getTime())
+    .sort((a, b) => b.time?.getTime() - a.time?.getTime())
     .map(post => (
       {
         ...post,
