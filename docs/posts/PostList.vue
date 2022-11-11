@@ -22,8 +22,9 @@ import { data as postList } from './post.data'
 
 <style>
 #post-list {
-  max-width: 1024px;
-  padding: 100px;
+  max-width: 800px;
+  padding-top: 100px;
+  /* padding: 100px; */
   margin: 0 auto;
 }
 .post-item{
