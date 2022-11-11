@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'ylw-blog',
   titleTemplate: false,
+  description: 'ylw\'s blog',
   themeConfig: {
     logo: {
       src: '/logo.svg',

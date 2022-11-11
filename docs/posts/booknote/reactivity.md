@@ -1,5 +1,6 @@
 ---
 title: 读书笔记——响应式系统
+description: Vue.js 响应式原理
 time: 2022-10-28
 ---
 
