@@ -1,10 +1,15 @@
 import fg from 'fast-glob'
 import matter from 'gray-matter'
+interface Time {
+  year: number
+  month: number | string
+  day: number
+}
 interface Post {
   link: string
   title: string
   description?: string
-  time: string
+  time: Time
 }
 
 export async function getPosts() {
@@ -17,13 +22,18 @@ export async function getPosts() {
         title: data.title,
         time: data.time,
         link: file.replace('docs', '').replace('.md', ''),
+        description: data.description,
       }
     })
     .sort((a, b) => b.time?.getTime() - a.time?.getTime())
     .map(post => (
       {
         ...post,
-        time: formatDate(post.time),
+        time: {
+          year: post.time.getFullYear(),
+          month: formatMonth(post.time.getMonth()),
+          day: post.time.getDate(),
+        },
       }
     )) as Post[]
 
@@ -51,5 +61,9 @@ function formatDate(dateObj: Date) {
     else return `${dom}th`
   }
   return `${dateOrdinal(dateObj.getDate())}, ${months[dateObj.getMonth()]}, ${dateObj.getFullYear()}`
+}
+function formatMonth(month: number) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+  return months[month]
 }
 

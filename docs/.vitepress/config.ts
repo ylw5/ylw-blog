@@ -10,7 +10,8 @@ export default defineConfig({
     },
     siteTitle: false,
     nav: [
-      { text: 'posts', link: '/posts/' },
+      { text: 'Home', link: '/' },
+      { text: 'Blog', link: '/posts/' },
     ],
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ylw5' },
@@ -25,7 +26,7 @@ export default defineConfig({
   markdown: {
     theme: {
       dark: 'vitesse-dark',
-      light: 'vitesse-light',
+      light: 'github-light',
     },
   },
   head: [

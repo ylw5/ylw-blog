@@ -4,56 +4,96 @@ import { data as postList } from './post.data'
 
 <template>
   <div id="post-list">
-    <a
+    <h1>
+      Blog
+    </h1>
+    <p>
+      在这里分享一些近期学习的内容和心得🙂
+    </p>
+    <article
       v-for="post in postList"
       :key="post.title"
       class="post-item"
-      :href="post.link"
     >
-      <div class="title">
-        <span>{{ post.title }}</span>
-      </div>
       <div class="time">
-        <span>{{ post.time }}</span>
+        <span class="month">{{ post.time.month }}</span>
+        <span class="day">{{ post.time.day }}</span>
+        <span class="year">{{ post.time.year }}</span>
       </div>
-    </a>
+      <div class="postinfo">
+        <a class="title" :href="post.link">{{ post.title }}</a>
+        <div class="description">
+          {{ post.description }}
+        </div>
+      </div>
+    </article>
   </div>
+  <!-- <div class="time">
+        <span>{{ post.time }}</span>
+      </div> -->
 </template>
 
 <style>
 #post-list {
   max-width: 800px;
-  padding-top: 100px;
-  /* padding: 100px; */
+  padding-top: 50px;
   margin: 0 auto;
+
+}
+#post-list h1{
+  font-size: calc(1em + 1.75vw);
+  font-weight: 500;
+  margin-bottom: 30px;
+  font-family: 'Montserrat';
+}
+#post-list p{
+  font-size: calc(1em + .1vw);
+  margin-bottom: 20px;
 }
 .post-item{
-  padding-left: 30px;
   display: block;
-  margin: 20px 0;
-  color: #626262;
+  margin: 35px 0;
   transition: all 0.2s;
+  display: flex;
 }
 .post-item:hover{
-  color: black;
+  transform: scale(1.01);
 }
-.title{
-  line-height: 1.3em;
-  font-weight: 5800;
-  font-size: 20px;
-  font-family: 'Inter';
-  letter-spacing: 0.02em;
+.post-item:hover .title{
+  color: var(--vp-c-brand);
 }
-.time{
-  font-family: 'KaushanScript-Regular';
-  font-size: 14px;
-  opacity: .4;
+.postinfo{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 12px;
 }
 
-.dark .post-item{
-  color: #d1cbcbde;
+.postinfo .title{
+  line-height: 1.8rem;
+  font-weight: 700;
+  font-size: calc(1em + .4vw);
+  font-family: 'Montserrat';
+  letter-spacing: 0.02em;
+  transition: all .4s;
 }
-.dark .post-item:hover{
-  color: #fff;
+.postinfo .description{
+  font-size: .8em;
+}
+.time{
+  display: flex;
+  flex-direction: column;
+  font-family: 'AtkinsonHyperlegible-Regular';
+  font-size: .8em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: .7rem;
+  border-right: 2px solid rgb(162, 157, 157);
+  line-height: 1.3rem;
+}
+.time .month,
+.time .day{
+  font-family: 'AtkinsonHyperlegible-Bold';
 }
 </style>

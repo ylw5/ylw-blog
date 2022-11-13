@@ -1,8 +1,30 @@
 @font-face {
   font-family: 'GreatVibes-Regular';
-  src: url(./GreatVibes-Regular.ttf);
+  src: url(./GreatVibes-Regular.woff2);
 }
 @font-face {
   font-family: 'KaushanScript-Regular';
-  src: url(./KaushanScript-Regular.ttf);
+  src: url(./KaushanScript-Regular.woff2);
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(./Montserrat-VariableFont_wght.woff2);
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'AtkinsonHyperlegible-Regular';
+  src: url(./AtkinsonHyperlegible-Regular.woff2);
+}
+@font-face {
+  font-family: 'AtkinsonHyperlegible-Bold';
+  src: url(./AtkinsonHyperlegible-Bold.woff2);
+}
+@font-face {
+  font-family: "Virgil";
+  src: url("https://excalidraw.com/Virgil.woff2");
+}
+@font-face {
+  font-family: "Cascadia";
+  src: url("https://excalidraw.com/Cascadia.woff2");
 }
