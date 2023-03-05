@@ -16,6 +16,10 @@ export async function getPosts() {
   const files = await fg(['docs/posts/*.md', 'docs/posts/**/*.md', '!docs/posts/index.md'])
   const posts
   = files
+    .filter((file) => {
+      const { data } = matter.read(file)
+      return data.time
+    })
     .map((file) => {
       const { data } = matter.read(file)
       return {
