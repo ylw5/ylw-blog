@@ -1,13 +1,6 @@
----
-title: 读书笔记——Diff 算法
-description: Vue.js Diff算法
-time: 2022-11-05
-outline: deep
----
 
 # Diff 算法
 
-> 本文是阅读《Vue.js 设计与实现》（霍春阳）第九、十、十一章后的一些总结和思考，部分文本和代码片段来自原文，书中包含更多细节。
 
 ## 简单 Diff
 
