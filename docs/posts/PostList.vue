@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { data as postList } from './post.data'
+import { data as posts } from './post.data'
 </script>
 
 <template>
@@ -11,26 +11,18 @@ import { data as postList } from './post.data'
       在这里分享一些近期学习的内容和心得🙂
     </p>
     <article
-      v-for="post in postList"
+      v-for="post in posts"
       :key="post.title"
       class="post-item"
     >
       <div class="time">
-        <span class="month">{{ post.time.month }}</span>
-        <span class="day">{{ post.time.day }}</span>
-        <span class="year">{{ post.time.year }}</span>
+        <span>{{ post.date.string }}</span>
       </div>
       <div class="postinfo">
-        <a class="title" :href="post.link">{{ post.title }}</a>
-        <div class="description">
-          {{ post.description }}
-        </div>
+        <a class="title" :href="post.url">{{ post.title }}</a>
       </div>
     </article>
   </div>
-  <!-- <div class="time">
-        <span>{{ post.time }}</span>
-      </div> -->
 </template>
 
 <style>

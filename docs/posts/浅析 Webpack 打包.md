@@ -1,6 +1,6 @@
 ---
 title: 浅析 Webpack 打包
-time: 2022-11-10
+date: 2022-11-10
 description: 前端为什么需要打包工具，webpack 打包原理，分析生成文件，简单实现功能
 ---
 

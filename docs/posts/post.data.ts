@@ -1,73 +1,40 @@
-import fg from 'fast-glob'
-import matter from 'gray-matter'
-interface Time {
-  year: number
-  month: number | string
-  day: number
-}
+import { createContentLoader } from 'vitepress'
+
 interface Post {
-  link: string
+  url: string
   title: string
-  description?: string
-  time: Time
-}
-
-export async function getPosts() {
-  const files = await fg(['docs/posts/*.md', 'docs/posts/**/*.md', '!docs/posts/index.md'])
-  const posts
-  = files
-    .filter((file) => {
-      const { data } = matter.read(file)
-      return data.time
-    })
-    .map((file) => {
-      const { data } = matter.read(file)
-      return {
-        title: data.title,
-        time: data.time,
-        link: file.replace('docs', '').replace('.md', ''),
-        description: data.description,
-      }
-    })
-    .sort((a, b) => b.time?.getTime() - a.time?.getTime())
-    .map(post => (
-      {
-        ...post,
-        time: {
-          year: post.time.getFullYear(),
-          month: formatMonth(post.time.getMonth()),
-          day: post.time.getDate(),
-        },
-      }
-    )) as Post[]
-
-  return posts
-}
-export declare const data: Post[]
-export default {
-  watch: ['./*.md', './**/*.md'],
-  async load() {
-    return await getPosts()
-  },
-}
-
-function formatDate(dateObj: Date) {
-  // const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-
-  const dateOrdinal = (dom: number) => {
-    if (dom === 31 || dom === 21 || dom === 1)
-      return `${dom}st`
-    else if (dom === 22 || dom === 2)
-      return `${dom}nd`
-    else if (dom === 23 || dom === 3)
-      return `${dom}rd`
-    else return `${dom}th`
+  date: {
+    time: number
+    string: string
   }
-  return `${dateOrdinal(dateObj.getDate())}, ${months[dateObj.getMonth()]}, ${dateObj.getFullYear()}`
-}
-function formatMonth(month: number) {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
-  return months[month]
 }
 
+declare const data: Post[]
+export { data }
+
+export default createContentLoader('posts/*.md', {
+  transform(raw): Post[] {
+    return raw.filter((data) => {
+      return data.frontmatter.date
+    }).map(({ url, frontmatter }) => {
+      return {
+        url,
+        title: frontmatter.title,
+        date: formatDate(frontmatter.date),
+      }
+    }).sort((a, b) => b.date.time - a.date.time)
+  },
+})
+
+function formatDate(raw: string): Post['date'] {
+  const date = new Date(raw)
+  date.setUTCHours(12)
+  return {
+    time: +date,
+    string: date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+  }
+}

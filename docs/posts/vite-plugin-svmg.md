@@ -1,7 +1,7 @@
 ---
 title: 开发一个 vite 插件——svmg
 description: 通过 vite 插件将图片中的颜色跟随主题背景变化
-time: 2023-01-10
+date: 2023-01-10
 ---
 
 # 开发一个 vite 插件——svmg
