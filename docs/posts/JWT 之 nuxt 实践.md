@@ -1,13 +1,53 @@
 ---
 title: JWT双Token鉴权之nuxt实践
-time: 2023-10-10
+date: 2023-4-10
 ---
 
-# JWT鉴权之 nuxt 实践
+# JWT 双 Token 鉴权之 nuxt 实践
 
 >  省略后端数据校验和失败条件分支
 
 access token 是临时的，为防止泄露，有效期短。但是这会导致每当 access token 过期，就得重新登录授权，很麻烦。于是引入 refresh token，鉴权服务器在发送 access token 给使用方的同时也发送一个 refresh token，它的有效期很长，用来刷新 access token，就不需要用户打开鉴权页面重新授权了。为保证 refresh token 安全（非常重要），需要存在使用方服务器中，cookie httponly 同站点携带，使用 https 访问鉴权服务器的刷新接口。。。。。
+
+首先说说普通鉴权的两种方式的优缺点：
+
+session-cookie
+
+优：
+
+- 会话数据（session）存储在数据库，方便控制，具有一定的安全性
+- 只需传session_id，数据量小，传输快
+
+缺点：
+
+- 使用 cookie 存在跨域问题
+- 移动端对cookie支持不是很好
+- 占内存，需要服务器定时清理过期的session
+- 多台服务器之间需要解决共享 session 的问题
+
+jwt-token
+
+优：
+
+- 放在请求头中传输，能跨域
+- 移动端支持更好
+- 不需要存储在数据库中，节省内存空间，也不需要去查询数据库
+- 不仅可以用于认证，也可用于交换信息
+
+缺点：
+
+- 无状态，不好控制，有安全隐患
+- 因为有被盗后的安全隐患，所以过期时间通常都设的很短
+
+
+
+双JWT同时吸收了两者的优点：
+
+在客户端和服务器通信的过程中同时传递AccessToken和 RefreshToken。
+
+AccessToken过期时间短，不存储与数据库中，RefreshToken存储与服务器。只有AccessToken过期之后才会去数据库查询 RefreshToken，如果存在，则返回新的AccessToken
+
+
 
 ## 登录授权
 
@@ -207,6 +247,7 @@ const initAuth = async () => {
   // ...
   await refreshToken()
   await getUser()
+  refreshAccessToken()
   // ...
 }
 ```
@@ -241,8 +282,6 @@ return {
 ```
 
 客户端将新的 accessToken 存储至全局状态中（将来发送的请求头 authorization 字段中都使用最新的 accessToken）
-
-
 
 2. 获取用户信息
 

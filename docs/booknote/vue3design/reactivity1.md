@@ -1,5 +1,5 @@
 
-# 响应式系统
+# 响应式系统的作用和实现
 
 
 
@@ -798,7 +798,7 @@ function computed(getter) {
 
 ## watch 的实现原理
 
-`watch` 本质就是**观测一个响应式书，当数据发生变化时通知并执行响应回调函数**。举个例子：
+`watch` 本质就是**观测一个响应式数据，当数据发生变化时通知并执行响应回调函数**。举个例子：
 
 ```javascript
 watch(obj, () =>{
@@ -852,7 +852,7 @@ function watch(source, callback) {
 function traverse(value, seen = new Set()) {
   // 如果要读取的数据是原始值，或者已经被读取过了，那么说明都不做
   if (typeof value !== 'object' || value === null || seen.has(value)) return
-  // 将数据添加到 seen 中，代表遍历地读取过了，比那面循环引用引起死循环
+  // 将数据添加到 seen 中，代表遍历地读取过了，避免循环引用引起死循环
   seen.add(value)
   // 暂时不考虑数组等其他结构
   // 假设 value 就是一个对象，使用 for...in 读取对象的每一个值，并递归地调用 traverse 进行处理
@@ -957,7 +957,7 @@ function watch(source, callback) {
 watch(obj, () => {
   console.log('变化了')
 }, {
-  flush: 'pre' // 默认 ‘pre’，还可以指定为 ‘post’ | ‘sync’
+  flush: 'pre' // 默认 'pre'，还可以指定为 'post' | 'sync'
 })
 ```
 
@@ -990,7 +990,7 @@ function watch(source, callback) {
           const p = Promise.resolve() // [!code ++]
           p.then(job) // [!code ++]
         } else { // [!code ++]
-          // 这里直接执行，本质上相当于 ’sync‘ 的实现模拟
+          // 这里直接执行，本质上相当于 'sync' 的实现模拟
           job() // [!code ++]
         } // [!code ++]
       }
